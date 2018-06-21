@@ -1,0 +1,188 @@
+﻿Qual​ ​o​ ​objetivo​ ​do​ ​comando​ ​​cache​ ​​em​ ​Spark? 
+
+	O comando cache(), em spark, aloca o objeto de pesquisa(RDD) na memória "ram" para otimizar as consultas, porem, na verdade ele apenas aponta esse alocamento de memória, pois o mesmo só ocorre quando uma consulta sobre o objeto for realizada, pois trata-se de uma operação Lazy; 
+
+
+
+O​ ​mesmo​ ​código​ ​implementado​ ​em​ ​Spark​ ​é​ ​normalmente​ ​mais​ ​rápido​ ​que​ ​a​ ​implementação​ ​equivalente​ ​em MapReduce.​ ​Por​ ​quê? 
+
+	Normalmente isso acontece pois no MapReduce todas as vezes precisamos manipular os "objetos", realiza-se operações diretamente em disco, já no Spark, os objetos são armazenados em memória "ram", ou melhor podem ser consultados em disco, manipulados e ou criados em memória "ram", e somente depois persistidos novamente em disco, isso, na maioria das vezes é mais rápido, pois existe economia de IO's.
+
+
+
+Qual​ ​é​ ​a​ ​função​ ​do​ ​​SparkContext​?
+
+	Os Context, ou os Contextos, em linguagem de programação, são usados para emcapsular as "classes" de conexões entre a linguagem em questão e os bancos de dados relacionais, na maioria das vezes, como no MVC do JAVA ou C# asp.NET.
+	No caso do Spark, esta é a função do  SparkContext​, emcapsular essa relação entre as fontes de dados (SqlContext ou HiveContext), 	podemos criar consultas SQL no pySpark por exemplo.
+
+
+
+Explique​ ​com​ ​suas​ ​palavras​ ​​ ​o​ ​que​ ​é​ ​​Resilient​ ​Distributed​ ​Datasets​​ ​(RDD).
+
+	Assim como os Context's, os  DataFrame's são dados estruturados em colunas, tal como no Python, como os Dataset's do Java ou C#, 	ou as tabelas dos bancos relacionais, ou seja estes datasets em spark, como nas outras linguagens, ficam em cache, em meória ram, a diferença entre o espark e as demais é a distribuição destes datasets. 
+	O Spark, no intúito de melhorar o processamento, "subdivide" os RDD's em algumas partições, para procesamentos paralelos multiplos. Importante lembrar que não podem ser modificadas, quando o fazemos na verdade estamos criando outro RDD.
+
+
+
+GroupByKey​ ​​é​ ​menos​ ​eficiente​ ​que​ ​​reduceByKey​ ​​em​ ​grandes​ ​dataset.​ ​Por​ ​quê?
+
+	O groupByKey é como um grup by do SQL, ou seja, grupa uma lista de valores em relação a uma chave, e para tal, consome muita 	memória "ram", pois percorre todo o dataset e vai armazenado os grupos, já o reduceByKey​, reduz o dataset original a um dataset que contenha apenas os dados que contenham a chave de redução, isto dimiui muito o consumo de "ram", pois dividimos em dois os processamentos, primeiro reduzimos e depois escolhemos a key correta.
+
+
+
+Explique​ ​o​ ​que​ ​o​ ​código​ ​Scala​ ​abaixo​ ​faz. 
+
+val​​ ​​textFile​​ ​​=​​ ​​sc​.​textFile​(​"hdfs://..."​) 
+val​​ ​​counts​​ ​​=​​ ​​textFile​.​flatMap​(​line​​ ​​=>​​ ​​line​.​split​(​"​ ​"​)) ​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​
+.​map​(​word​​ ​​=>​​ ​​(​word​,​​ ​​1​)) ​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​
+.​reduceByKey​(​_​​ ​​+​​ ​​_​) 
+counts​.​saveAsTextFile​(​"hdfs://..."​
+
+
+val​​ ​​textFile​​ ​​=​​ ​​sc​.​textFile​(​"hdfs://..."​) 
+	
+	//Aqui cria-se uma variavel "textFile​​", onde se lê o arquivo indicado no parametro do textFile​().
+
+val​​ ​​counts​​ ​​=​​ ​​textFile​.​flatMap​(​line​​ ​​=>​​ ​​line​.​split​(​"​ ​"​))
+	.​map​(​word​​ ​​=>​​ ​(​word​,​​ ​​1​)) ​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ 
+		​​.​reduceByKey​(​_​​ ​​+​​ ​​_​) 
+
+	//Aqui cria-se uma variavel "counts​​", primeiro usamos um flatMap​ para splitarmos as palvras de cada linha separadas por " "; em seguida usamos a função map para criar uma lista de strig e inteiros, onde depois usamos  reduceByKey​ para somarmos o numeoro de vezes que esta palavra aparece no texto selecionado.
+	Como resultado temos uma "lista" do tipo chave/valor (string,int);
+
+counts​.​saveAsTextFile​(​"hdfs://..."​)
+
+	//Com este comando salvamos nossos dados no caminho indicado;
+
+
+************************************************************************************
+
+	//Apesar de desenvolver mais em python no Spark (pySpark), estou utilizando Escala, pela otimização da sintaxe da escrita.
+	//Todas as evidencias geradas pelo spark, na busca das respostas destas questões abaixo, estão arquivadas no github, junto com este documento.
+
+
+ Responda​ ​as​ ​seguintes​ ​questões​ ​devem​ ​ser​ ​desenvolvidas​ ​em​ ​Spark​ ​utilizando​ ​a​ ​sua​ ​linguagem​ ​de​ ​preferência
+
+	
+1. Número​ ​de​ ​hosts​ ​únicos. 
+	93887 - host jul
+	75074 - host aug
+        ------
+	169961 - Total Distinct Host's
+	
+execuções:
+
+	val base = sc.textFile("access_log_Jul95.txt")
+	scala> val baseData = base.flatMap(lines => lines.split("/n")).flatMap(linha => linha.split(" - - ")).map(line =>(line,1)).reduceByKey(_+_)
+	baseData: org.apache.spark.rdd.RDD[(String, Int)] = ShuffledRDD[69] at 	reduceByKey at <console>:25
+	scala> bases.saveAsTextFile("testeBaseJul")
+
+	scala> val baseSplit = sc.textFile("BaseSplit.txt")
+	baseSplit: org.apache.spark.rdd.RDD[String] = BaseSplit.txt MapPartitionsRDD	[72] at textFile at <console>:24
+
+
+	scala> val Host = baseSplit.flatMap(x => if(x.contains("]")) None else Some(x))
+	Host: org.apache.spark.rdd.RDD[String] = MapPartitionsRDD[73] at flatMap at 	<console>:25
+
+	scala> Host.saveAsTextFile("testeJul")
+	val base = sc.textFile("access_log_Aug95.txt")
+	scala> val baseData = base.flatMap(lines => lines.split("/n")).flatMap(linha => linha.split(" - - ")).map(line =>(line,1)).reduceByKey(_+_)
+	baseData: org.apache.spark.rdd.RDD[(String, Int)] = ShuffledRDD[69] at 	reduceByKey at <console>:25
+	scala> bases.saveAsTextFile("testeBaseAug")
+
+	scala> val baseSplit = sc.textFile("BaseSplit.txt")
+	baseSplit: org.apache.spark.rdd.RDD[String] = BaseSplit.txt MapPartitionsRDD		[72] at textFile at <console>:24
+
+
+	scala> val Host = baseSplit.flatMap(x => if(x.contains("]")) None else Some(x))
+	Host: org.apache.spark.rdd.RDD[String] = MapPartitionsRDD[73] at flatMap at 	<console>:25
+	scala> Host.saveAsTextFile("testeAug")
+
+
+2. O​ ​total​ ​de​ ​erros​ ​404. 
+	Quantidade total Erros 404 = 10056
+
+	execução:
+	scala> val Q404 = base.flatMap(line => line.split("/n")).flatMap(x => if(x.contains(" 404 ")) Some(x) else None)
+	Q404: org.apache.spark.rdd.RDD[String] = MapPartitionsRDD[80] at flatMap at <console>:25
+
+	scala> Q404.count()
+	res27: Long = 10056
+
+3. Os​ ​5​ ​URLs​ ​que​ ​mais​ ​causaram​ ​erro​ ​404. 
+
+	Rank: 0 - Host: dialip-217.den.mmc.com - Numero de 404: 56
+	Rank: 1 - Host: 155.148.25.4 - Numero de 404: 40
+	Rank: 2 - Host: ts8-1.westwood.ts.ucla.edu - Numero de 404: 37
+	Rank: 3 - Host: 204.62.245.32 - Numero de 404: 36
+	Rank: 4 - Host: maz3.maz.net - Numero de 404: 36
+	
+	Execução:
+	scala>  val Q = Q404top5.flatMap(line => line.split("/n")).flatMap(x => if(x.contains(" 404 ")) None else Some(x))
+	Q: org.apache.spark.rdd.RDD[String] = MapPartitionsRDD[102] at flatMap at <console>:25
+
+	scala>  val Qfim = Q.flatMap(line => line.split("/n")).map(h => (h,1)).reduceByKey(_+_)
+	Qfim: org.apache.spark.rdd.RDD[(String, Int)] = ShuffledRDD[105] at reduceByKey at <console>:25
+
+	scala> Qfim.sortBy(_._2)
+	res36: org.apache.spark.rdd.RDD[(String, Int)] = MapPartitionsRDD[110] at sortBy at <console>:26
+	//Como Este sortBy não funcionou, para obter os 5, cosolidei os arquivos em um e usei o c# para tal;
+	
+	using System;
+	using System.Collections.Generic;
+	using System.IO;
+	using System.Linq;
+	using System.Text;
+
+	namespace ConsoleApp1
+	{
+    	class Program
+    	{
+        	static void Main(string[] args)
+        	{
+
+	            string[] lines = System.IO.File.ReadAllLines(@"C:\Users\thiag\Desktop\Host404.txt");
+        	    var dict = new SortedDictionary<string, int>();
+        	    foreach (string line in lines)
+        	    {
+                	string li=line.Replace("(", "").Replace(")", "");
+                	string[] split = li.Split(",");
+
+	                dict.Add(split[0], Convert.ToInt32(split[1]));
+
+	            }
+           	    var sortedDict = from entry in dict orderby entry.Value descending select entry;
+             	    StringBuilder result = new StringBuilder();
+
+	            int x = 0;
+	            foreach(var pair in sortedDict)
+	            { 
+        	        result.AppendFormat("Rank: {0} - Host: {1} - Numero de 404: {2}", x, pair.Key, pair.Value).AppendLine();
+                	x++;
+                if (x > 4) break;
+            	}
+            	using (Stream arquivo = File.Open("arquivo.txt", FileMode.Create))
+            	using (StreamWriter escrit = new StreamWriter(arquivo))
+            	{
+                	escrit.Write(result.ToString());
+            	}
+
+            Console.WriteLine(result.ToString());
+	     }
+	}
+	}
+	
+
+ 	
+
+
+
+4. Quantidade​ ​de​ ​erros​ ​404​ ​por​ ​dia. 
+
+	10056/(2*31(dias dos messes de Julho e Agosto)) = 162,19 erro404/dia
+
+
+5. O​ ​total​ ​de​ ​bytes​ ​retornados.
+	
+	434300000033444
+
